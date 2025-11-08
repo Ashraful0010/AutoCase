@@ -1,0 +1,501 @@
+test_id,requirement_id,test_name,test_description,test_category,priority,test_steps,expected_result,confidence_score
+TC_1_1,REQ_1,Security_test Test 1,Verify that an unauthorized users cannot allow the email.,security_test,High,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Verify that an unauthorized users cannot allow the email.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.9
+TC_1_2,REQ_1,Security_test Test 2,Test for SQL injection vulnerabilities in input fields related to email.,security_test,High,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Test for SQL injection vulnerabilities in input fields related to email.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.9
+TC_1_3,REQ_1,Security_test Test 3,Verify allow requires proper authentication.,security_test,High,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Verify allow requires proper authentication.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.9
+TC_1_4,REQ_1,Security_test Test 4,Test session management when the users performs allow.,security_test,High,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Test session management when the users performs allow.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.9
+TC_1_5,REQ_1,Security_test Test 5,Check that sensitive data related to email is masked or encrypted.,security_test,High,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Check that sensitive data related to email is masked or encrypted.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.9
+TC_2_1,REQ_2,Functional_test Test 1,Verify that the system can successfully validate the format.,functional_test,High,"1. Navigate to the format where the validate can be performed.
+2. As a(n) system, provide all necessary valid data to perform the validate.
+3. Initiate the validate (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully validate the format.'",The system should be able to complete the validate successfully. The state of the format should be updated correctly as described in the requirement.,0.94
+TC_2_2,REQ_2,Functional_test Test 2,Test the primary workflow for validate the format.,functional_test,High,"1. Navigate to the format where the validate can be performed.
+2. As a(n) system, provide all necessary valid data to perform the validate.
+3. Initiate the validate (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for validate the format.'",The system should be able to complete the validate successfully. The state of the format should be updated correctly as described in the requirement.,0.94
+TC_2_3,REQ_2,Functional_test Test 3,Check that the correct output is displayed after the system completes validate.,functional_test,High,"1. Navigate to the format where the validate can be performed.
+2. As a(n) system, provide all necessary valid data to perform the validate.
+3. Initiate the validate (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes validate.'",The system should be able to complete the validate successfully. The state of the format should be updated correctly as described in the requirement.,0.94
+TC_2_4,REQ_2,Functional_test Test 4,Verify all UI elements related to format are present and functional.,functional_test,High,"1. Navigate to the format where the validate can be performed.
+2. As a(n) system, provide all necessary valid data to perform the validate.
+3. Initiate the validate (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to format are present and functional.'",The system should be able to complete the validate successfully. The state of the format should be updated correctly as described in the requirement.,0.94
+TC_2_5,REQ_2,Functional_test Test 5,Test alternative paths for the system to validate the format.,functional_test,High,"1. Navigate to the format where the validate can be performed.
+2. As a(n) system, provide all necessary valid data to perform the validate.
+3. Initiate the validate (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to validate the format.'",The system should be able to complete the validate successfully. The state of the format should be updated correctly as described in the requirement.,0.94
+TC_3_1,REQ_3,Security_test Test 1,Verify that an unauthorized system cannot enforce the policy.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to policy.
+2. Attempt to perform the privileged enforce as described: 'Verify that an unauthorized system cannot enforce the policy.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized enforce and log the security attempt. The system should not gain access to policy.,0.79
+TC_3_2,REQ_3,Security_test Test 2,Test for SQL injection vulnerabilities in input fields related to policy.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to policy.
+2. Attempt to perform the privileged enforce as described: 'Test for SQL injection vulnerabilities in input fields related to policy.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized enforce and log the security attempt. The system should not gain access to policy.,0.79
+TC_3_3,REQ_3,Security_test Test 3,Verify enforce requires proper authentication.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to policy.
+2. Attempt to perform the privileged enforce as described: 'Verify enforce requires proper authentication.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized enforce and log the security attempt. The system should not gain access to policy.,0.79
+TC_3_4,REQ_3,Security_test Test 4,Test session management when the system performs enforce.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to policy.
+2. Attempt to perform the privileged enforce as described: 'Test session management when the system performs enforce.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized enforce and log the security attempt. The system should not gain access to policy.,0.79
+TC_3_5,REQ_3,Security_test Test 5,Check that sensitive data related to policy is masked or encrypted.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to policy.
+2. Attempt to perform the privileged enforce as described: 'Check that sensitive data related to policy is masked or encrypted.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized enforce and log the security attempt. The system should not gain access to policy.,0.79
+TC_4_1,REQ_4,Functional_test Test 1,Verify that the users can successfully allow the password.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the users can successfully allow the password.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.75
+TC_4_2,REQ_4,Functional_test Test 2,Test the primary workflow for allow the password.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for allow the password.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.75
+TC_4_3,REQ_4,Functional_test Test 3,Check that the correct output is displayed after the users completes allow.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the users completes allow.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.75
+TC_4_4,REQ_4,Functional_test Test 4,Verify all UI elements related to password are present and functional.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to password are present and functional.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.75
+TC_4_5,REQ_4,Functional_test Test 5,Test alternative paths for the users to allow the password.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the users to allow the password.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.75
+TC_5_1,REQ_5,Functional_test Test 1,Verify that the system can successfully notify the users.,functional_test,High,"1. Navigate to the users where the notify can be performed.
+2. As a(n) system, provide all necessary valid data to perform the notify.
+3. Initiate the notify (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully notify the users.'",The system should be able to complete the notify successfully. The state of the users should be updated correctly as described in the requirement.,0.89
+TC_5_2,REQ_5,Functional_test Test 2,Test the primary workflow for notify the users.,functional_test,High,"1. Navigate to the users where the notify can be performed.
+2. As a(n) system, provide all necessary valid data to perform the notify.
+3. Initiate the notify (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for notify the users.'",The system should be able to complete the notify successfully. The state of the users should be updated correctly as described in the requirement.,0.89
+TC_5_3,REQ_5,Functional_test Test 3,Check that the correct output is displayed after the system completes notify.,functional_test,High,"1. Navigate to the users where the notify can be performed.
+2. As a(n) system, provide all necessary valid data to perform the notify.
+3. Initiate the notify (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes notify.'",The system should be able to complete the notify successfully. The state of the users should be updated correctly as described in the requirement.,0.89
+TC_5_4,REQ_5,Functional_test Test 4,Verify all UI elements related to users are present and functional.,functional_test,High,"1. Navigate to the users where the notify can be performed.
+2. As a(n) system, provide all necessary valid data to perform the notify.
+3. Initiate the notify (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to users are present and functional.'",The system should be able to complete the notify successfully. The state of the users should be updated correctly as described in the requirement.,0.89
+TC_5_5,REQ_5,Functional_test Test 5,Test alternative paths for the system to notify the users.,functional_test,High,"1. Navigate to the users where the notify can be performed.
+2. As a(n) system, provide all necessary valid data to perform the notify.
+3. Initiate the notify (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to notify the users.'",The system should be able to complete the notify successfully. The state of the users should be updated correctly as described in the requirement.,0.89
+TC_6_1,REQ_6,Security_test Test 1,Verify that an unauthorized users cannot allow the email.,security_test,Medium,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Verify that an unauthorized users cannot allow the email.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.78
+TC_6_2,REQ_6,Security_test Test 2,Test for SQL injection vulnerabilities in input fields related to email.,security_test,Medium,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Test for SQL injection vulnerabilities in input fields related to email.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.78
+TC_6_3,REQ_6,Security_test Test 3,Verify allow requires proper authentication.,security_test,Medium,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Verify allow requires proper authentication.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.78
+TC_6_4,REQ_6,Security_test Test 4,Test session management when the users performs allow.,security_test,Medium,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Test session management when the users performs allow.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.78
+TC_6_5,REQ_6,Security_test Test 5,Check that sensitive data related to email is masked or encrypted.,security_test,Medium,"1. As an users (e.g., an unauthorized user, or user with wrong role), navigate to email.
+2. Attempt to perform the privileged allow as described: 'Check that sensitive data related to email is masked or encrypted.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized allow and log the security attempt. The users should not gain access to email.,0.78
+TC_7_1,REQ_7,Security_test Test 1,Verify that an unauthorized system cannot lock the account.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to account.
+2. Attempt to perform the privileged lock as described: 'Verify that an unauthorized system cannot lock the account.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized lock and log the security attempt. The system should not gain access to account.,0.82
+TC_7_2,REQ_7,Security_test Test 2,Test for SQL injection vulnerabilities in input fields related to account.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to account.
+2. Attempt to perform the privileged lock as described: 'Test for SQL injection vulnerabilities in input fields related to account.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized lock and log the security attempt. The system should not gain access to account.,0.82
+TC_7_3,REQ_7,Security_test Test 3,Verify lock requires proper authentication.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to account.
+2. Attempt to perform the privileged lock as described: 'Verify lock requires proper authentication.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized lock and log the security attempt. The system should not gain access to account.,0.82
+TC_7_4,REQ_7,Security_test Test 4,Test session management when the system performs lock.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to account.
+2. Attempt to perform the privileged lock as described: 'Test session management when the system performs lock.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized lock and log the security attempt. The system should not gain access to account.,0.82
+TC_7_5,REQ_7,Security_test Test 5,Check that sensitive data related to account is masked or encrypted.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to account.
+2. Attempt to perform the privileged lock as described: 'Check that sensitive data related to account is masked or encrypted.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized lock and log the security attempt. The system should not gain access to account.,0.82
+TC_8_1,REQ_8,Security_test Test 1,Verify that an unauthorized system cannot display the message.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to message.
+2. Attempt to perform the privileged display as described: 'Verify that an unauthorized system cannot display the message.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized display and log the security attempt. The system should not gain access to message.,0.81
+TC_8_2,REQ_8,Security_test Test 2,Test for SQL injection vulnerabilities in input fields related to message.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to message.
+2. Attempt to perform the privileged display as described: 'Test for SQL injection vulnerabilities in input fields related to message.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized display and log the security attempt. The system should not gain access to message.,0.81
+TC_8_3,REQ_8,Security_test Test 3,Verify display requires proper authentication.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to message.
+2. Attempt to perform the privileged display as described: 'Verify display requires proper authentication.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized display and log the security attempt. The system should not gain access to message.,0.81
+TC_8_4,REQ_8,Security_test Test 4,Test session management when the system performs display.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to message.
+2. Attempt to perform the privileged display as described: 'Test session management when the system performs display.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized display and log the security attempt. The system should not gain access to message.,0.81
+TC_8_5,REQ_8,Security_test Test 5,Check that sensitive data related to message is masked or encrypted.,security_test,High,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to message.
+2. Attempt to perform the privileged display as described: 'Check that sensitive data related to message is masked or encrypted.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized display and log the security attempt. The system should not gain access to message.,0.81
+TC_9_1,REQ_9,Functional_test Test 1,Verify that the users can successfully allow the the feature.,functional_test,High,"1. Navigate to the page/feature where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the users can successfully allow the the feature.'",The users should be able to complete the allow successfully. The state of the feature should be updated correctly as described in the requirement.,0.91
+TC_9_2,REQ_9,Functional_test Test 2,Test the primary workflow for allow the the feature.,functional_test,High,"1. Navigate to the page/feature where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for allow the the feature.'",The users should be able to complete the allow successfully. The state of the feature should be updated correctly as described in the requirement.,0.91
+TC_9_3,REQ_9,Functional_test Test 3,Check that the correct output is displayed after the users completes allow.,functional_test,High,"1. Navigate to the page/feature where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the users completes allow.'",The users should be able to complete the allow successfully. The state of the feature should be updated correctly as described in the requirement.,0.91
+TC_9_4,REQ_9,Functional_test Test 4,Verify all UI elements related to the feature are present and functional.,functional_test,High,"1. Navigate to the page/feature where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to the feature are present and functional.'",The users should be able to complete the allow successfully. The state of the feature should be updated correctly as described in the requirement.,0.91
+TC_9_5,REQ_9,Functional_test Test 5,Test alternative paths for the users to allow the the feature.,functional_test,High,"1. Navigate to the page/feature where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the users to allow the the feature.'",The users should be able to complete the allow successfully. The state of the feature should be updated correctly as described in the requirement.,0.91
+TC_10_1,REQ_10,Security_test Test 1,Verify that an unauthorized system cannot support the functionality.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to functionality.
+2. Attempt to perform the privileged support as described: 'Verify that an unauthorized system cannot support the functionality.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized support and log the security attempt. The system should not gain access to functionality.,0.65
+TC_10_2,REQ_10,Security_test Test 2,Test for SQL injection vulnerabilities in input fields related to functionality.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to functionality.
+2. Attempt to perform the privileged support as described: 'Test for SQL injection vulnerabilities in input fields related to functionality.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized support and log the security attempt. The system should not gain access to functionality.,0.65
+TC_10_3,REQ_10,Security_test Test 3,Verify support requires proper authentication.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to functionality.
+2. Attempt to perform the privileged support as described: 'Verify support requires proper authentication.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized support and log the security attempt. The system should not gain access to functionality.,0.65
+TC_10_4,REQ_10,Security_test Test 4,Test session management when the system performs support.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to functionality.
+2. Attempt to perform the privileged support as described: 'Test session management when the system performs support.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized support and log the security attempt. The system should not gain access to functionality.,0.65
+TC_10_5,REQ_10,Security_test Test 5,Check that sensitive data related to functionality is masked or encrypted.,security_test,Medium,"1. As an system (e.g., an unauthorized user, or user with wrong role), navigate to functionality.
+2. Attempt to perform the privileged support as described: 'Check that sensitive data related to functionality is masked or encrypted.'
+3. Observe all system responses, including UI messages and network responses (if possible).
+4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.
+5. (If possible) Check system logs to ensure the unauthorized attempt was recorded.",The system should block the unauthorized support and log the security attempt. The system should not gain access to functionality.,0.65
+TC_11_1,REQ_11,Functional_test Test 1,Verify that the users can successfully allow the password.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the users can successfully allow the password.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.71
+TC_11_2,REQ_11,Functional_test Test 2,Test the primary workflow for allow the password.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for allow the password.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.71
+TC_11_3,REQ_11,Functional_test Test 3,Check that the correct output is displayed after the users completes allow.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the users completes allow.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.71
+TC_11_4,REQ_11,Functional_test Test 4,Verify all UI elements related to password are present and functional.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to password are present and functional.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.71
+TC_11_5,REQ_11,Functional_test Test 5,Test alternative paths for the users to allow the password.,functional_test,Medium,"1. Navigate to the password where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the users to allow the password.'",The users should be able to complete the allow successfully. The state of the password should be updated correctly as described in the requirement.,0.71
+TC_12_1,REQ_12,Functional_test Test 1,Verify that the system can successfully provide the bar.,functional_test,High,"1. Navigate to the bar where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully provide the bar.'",The system should be able to complete the provide successfully. The state of the bar should be updated correctly as described in the requirement.,0.95
+TC_12_2,REQ_12,Functional_test Test 2,Test the primary workflow for provide the bar.,functional_test,High,"1. Navigate to the bar where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for provide the bar.'",The system should be able to complete the provide successfully. The state of the bar should be updated correctly as described in the requirement.,0.95
+TC_12_3,REQ_12,Functional_test Test 3,Check that the correct output is displayed after the system completes provide.,functional_test,High,"1. Navigate to the bar where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes provide.'",The system should be able to complete the provide successfully. The state of the bar should be updated correctly as described in the requirement.,0.95
+TC_12_4,REQ_12,Functional_test Test 4,Verify all UI elements related to bar are present and functional.,functional_test,High,"1. Navigate to the bar where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to bar are present and functional.'",The system should be able to complete the provide successfully. The state of the bar should be updated correctly as described in the requirement.,0.95
+TC_12_5,REQ_12,Functional_test Test 5,Test alternative paths for the system to provide the bar.,functional_test,High,"1. Navigate to the bar where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to provide the bar.'",The system should be able to complete the provide successfully. The state of the bar should be updated correctly as described in the requirement.,0.95
+TC_13_1,REQ_13,Functional_test Test 1,Verify that the users can successfully allow the content.,functional_test,High,"1. Navigate to the content where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the users can successfully allow the content.'",The users should be able to complete the allow successfully. The state of the content should be updated correctly as described in the requirement.,0.99
+TC_13_2,REQ_13,Functional_test Test 2,Test the primary workflow for allow the content.,functional_test,High,"1. Navigate to the content where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for allow the content.'",The users should be able to complete the allow successfully. The state of the content should be updated correctly as described in the requirement.,0.99
+TC_13_3,REQ_13,Functional_test Test 3,Check that the correct output is displayed after the users completes allow.,functional_test,High,"1. Navigate to the content where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the users completes allow.'",The users should be able to complete the allow successfully. The state of the content should be updated correctly as described in the requirement.,0.99
+TC_13_4,REQ_13,Functional_test Test 4,Verify all UI elements related to content are present and functional.,functional_test,High,"1. Navigate to the content where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to content are present and functional.'",The users should be able to complete the allow successfully. The state of the content should be updated correctly as described in the requirement.,0.99
+TC_13_5,REQ_13,Functional_test Test 5,Test alternative paths for the users to allow the content.,functional_test,High,"1. Navigate to the content where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the users to allow the content.'",The users should be able to complete the allow successfully. The state of the content should be updated correctly as described in the requirement.,0.99
+TC_14_1,REQ_14,Functional_test Test 1,Verify that the system can successfully return the results.,functional_test,High,"1. Navigate to the results where the return can be performed.
+2. As a(n) system, provide all necessary valid data to perform the return.
+3. Initiate the return (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully return the results.'",The system should be able to complete the return successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_14_2,REQ_14,Functional_test Test 2,Test the primary workflow for return the results.,functional_test,High,"1. Navigate to the results where the return can be performed.
+2. As a(n) system, provide all necessary valid data to perform the return.
+3. Initiate the return (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for return the results.'",The system should be able to complete the return successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_14_3,REQ_14,Functional_test Test 3,Check that the correct output is displayed after the system completes return.,functional_test,High,"1. Navigate to the results where the return can be performed.
+2. As a(n) system, provide all necessary valid data to perform the return.
+3. Initiate the return (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes return.'",The system should be able to complete the return successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_14_4,REQ_14,Functional_test Test 4,Verify all UI elements related to results are present and functional.,functional_test,High,"1. Navigate to the results where the return can be performed.
+2. As a(n) system, provide all necessary valid data to perform the return.
+3. Initiate the return (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to results are present and functional.'",The system should be able to complete the return successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_14_5,REQ_14,Functional_test Test 5,Test alternative paths for the system to return the results.,functional_test,High,"1. Navigate to the results where the return can be performed.
+2. As a(n) system, provide all necessary valid data to perform the return.
+3. Initiate the return (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to return the results.'",The system should be able to complete the return successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_15_1,REQ_15,Functional_test Test 1,Verify that the system can successfully display the results.,functional_test,High,"1. Navigate to the results where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully display the results.'",The system should be able to complete the display successfully. The state of the results should be updated correctly as described in the requirement.,0.95
+TC_15_2,REQ_15,Functional_test Test 2,Test the primary workflow for display the results.,functional_test,High,"1. Navigate to the results where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for display the results.'",The system should be able to complete the display successfully. The state of the results should be updated correctly as described in the requirement.,0.95
+TC_15_3,REQ_15,Functional_test Test 3,Check that the correct output is displayed after the system completes display.,functional_test,High,"1. Navigate to the results where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes display.'",The system should be able to complete the display successfully. The state of the results should be updated correctly as described in the requirement.,0.95
+TC_15_4,REQ_15,Functional_test Test 4,Verify all UI elements related to results are present and functional.,functional_test,High,"1. Navigate to the results where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to results are present and functional.'",The system should be able to complete the display successfully. The state of the results should be updated correctly as described in the requirement.,0.95
+TC_15_5,REQ_15,Functional_test Test 5,Test alternative paths for the system to display the results.,functional_test,High,"1. Navigate to the results where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to display the results.'",The system should be able to complete the display successfully. The state of the results should be updated correctly as described in the requirement.,0.95
+TC_16_1,REQ_16,Functional_test Test 1,Verify that the users can successfully allow the results.,functional_test,High,"1. Navigate to the results where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the users can successfully allow the results.'",The users should be able to complete the allow successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_16_2,REQ_16,Functional_test Test 2,Test the primary workflow for allow the results.,functional_test,High,"1. Navigate to the results where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for allow the results.'",The users should be able to complete the allow successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_16_3,REQ_16,Functional_test Test 3,Check that the correct output is displayed after the users completes allow.,functional_test,High,"1. Navigate to the results where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the users completes allow.'",The users should be able to complete the allow successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_16_4,REQ_16,Functional_test Test 4,Verify all UI elements related to results are present and functional.,functional_test,High,"1. Navigate to the results where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to results are present and functional.'",The users should be able to complete the allow successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_16_5,REQ_16,Functional_test Test 5,Test alternative paths for the users to allow the results.,functional_test,High,"1. Navigate to the results where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the users to allow the results.'",The users should be able to complete the allow successfully. The state of the results should be updated correctly as described in the requirement.,0.98
+TC_17_1,REQ_17,Functional_test Test 1,Verify that the users can successfully allow the searches.,functional_test,High,"1. Navigate to the searches where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the users can successfully allow the searches.'",The users should be able to complete the allow successfully. The state of the searches should be updated correctly as described in the requirement.,0.89
+TC_17_2,REQ_17,Functional_test Test 2,Test the primary workflow for allow the searches.,functional_test,High,"1. Navigate to the searches where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for allow the searches.'",The users should be able to complete the allow successfully. The state of the searches should be updated correctly as described in the requirement.,0.89
+TC_17_3,REQ_17,Functional_test Test 3,Check that the correct output is displayed after the users completes allow.,functional_test,High,"1. Navigate to the searches where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the users completes allow.'",The users should be able to complete the allow successfully. The state of the searches should be updated correctly as described in the requirement.,0.89
+TC_17_4,REQ_17,Functional_test Test 4,Verify all UI elements related to searches are present and functional.,functional_test,High,"1. Navigate to the searches where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to searches are present and functional.'",The users should be able to complete the allow successfully. The state of the searches should be updated correctly as described in the requirement.,0.89
+TC_17_5,REQ_17,Functional_test Test 5,Test alternative paths for the users to allow the searches.,functional_test,High,"1. Navigate to the searches where the allow can be performed.
+2. As a(n) users, provide all necessary valid data to perform the allow.
+3. Initiate the allow (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the users to allow the searches.'",The users should be able to complete the allow successfully. The state of the searches should be updated correctly as described in the requirement.,0.89
+TC_18_1,REQ_18,Functional_test Test 1,Verify that the system can successfully provide the suggestions.,functional_test,High,"1. Navigate to the suggestions where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully provide the suggestions.'",The system should be able to complete the provide successfully. The state of the suggestions should be updated correctly as described in the requirement.,0.86
+TC_18_2,REQ_18,Functional_test Test 2,Test the primary workflow for provide the suggestions.,functional_test,High,"1. Navigate to the suggestions where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for provide the suggestions.'",The system should be able to complete the provide successfully. The state of the suggestions should be updated correctly as described in the requirement.,0.86
+TC_18_3,REQ_18,Functional_test Test 3,Check that the correct output is displayed after the system completes provide.,functional_test,High,"1. Navigate to the suggestions where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes provide.'",The system should be able to complete the provide successfully. The state of the suggestions should be updated correctly as described in the requirement.,0.86
+TC_18_4,REQ_18,Functional_test Test 4,Verify all UI elements related to suggestions are present and functional.,functional_test,High,"1. Navigate to the suggestions where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to suggestions are present and functional.'",The system should be able to complete the provide successfully. The state of the suggestions should be updated correctly as described in the requirement.,0.86
+TC_18_5,REQ_18,Functional_test Test 5,Test alternative paths for the system to provide the suggestions.,functional_test,High,"1. Navigate to the suggestions where the provide can be performed.
+2. As a(n) system, provide all necessary valid data to perform the provide.
+3. Initiate the provide (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to provide the suggestions.'",The system should be able to complete the provide successfully. The state of the suggestions should be updated correctly as described in the requirement.,0.86
+TC_19_1,REQ_19,Functional_test Test 1,Verify that the system can successfully highlight the keywords.,functional_test,High,"1. Navigate to the keywords where the highlight can be performed.
+2. As a(n) system, provide all necessary valid data to perform the highlight.
+3. Initiate the highlight (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully highlight the keywords.'",The system should be able to complete the highlight successfully. The state of the keywords should be updated correctly as described in the requirement.,0.95
+TC_19_2,REQ_19,Functional_test Test 2,Test the primary workflow for highlight the keywords.,functional_test,High,"1. Navigate to the keywords where the highlight can be performed.
+2. As a(n) system, provide all necessary valid data to perform the highlight.
+3. Initiate the highlight (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for highlight the keywords.'",The system should be able to complete the highlight successfully. The state of the keywords should be updated correctly as described in the requirement.,0.95
+TC_19_3,REQ_19,Functional_test Test 3,Check that the correct output is displayed after the system completes highlight.,functional_test,High,"1. Navigate to the keywords where the highlight can be performed.
+2. As a(n) system, provide all necessary valid data to perform the highlight.
+3. Initiate the highlight (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes highlight.'",The system should be able to complete the highlight successfully. The state of the keywords should be updated correctly as described in the requirement.,0.95
+TC_19_4,REQ_19,Functional_test Test 4,Verify all UI elements related to keywords are present and functional.,functional_test,High,"1. Navigate to the keywords where the highlight can be performed.
+2. As a(n) system, provide all necessary valid data to perform the highlight.
+3. Initiate the highlight (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to keywords are present and functional.'",The system should be able to complete the highlight successfully. The state of the keywords should be updated correctly as described in the requirement.,0.95
+TC_19_5,REQ_19,Functional_test Test 5,Test alternative paths for the system to highlight the keywords.,functional_test,High,"1. Navigate to the keywords where the highlight can be performed.
+2. As a(n) system, provide all necessary valid data to perform the highlight.
+3. Initiate the highlight (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to highlight the keywords.'",The system should be able to complete the highlight successfully. The state of the keywords should be updated correctly as described in the requirement.,0.95
+TC_20_1,REQ_20,Functional_test Test 1,Verify that the system can successfully display the message.,functional_test,High,"1. Navigate to the message where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify that the system can successfully display the message.'",The system should be able to complete the display successfully. The state of the message should be updated correctly as described in the requirement.,0.92
+TC_20_2,REQ_20,Functional_test Test 2,Test the primary workflow for display the message.,functional_test,High,"1. Navigate to the message where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test the primary workflow for display the message.'",The system should be able to complete the display successfully. The state of the message should be updated correctly as described in the requirement.,0.92
+TC_20_3,REQ_20,Functional_test Test 3,Check that the correct output is displayed after the system completes display.,functional_test,High,"1. Navigate to the message where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Check that the correct output is displayed after the system completes display.'",The system should be able to complete the display successfully. The state of the message should be updated correctly as described in the requirement.,0.92
+TC_20_4,REQ_20,Functional_test Test 4,Verify all UI elements related to message are present and functional.,functional_test,High,"1. Navigate to the message where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Verify all UI elements related to message are present and functional.'",The system should be able to complete the display successfully. The state of the message should be updated correctly as described in the requirement.,0.92
+TC_20_5,REQ_20,Functional_test Test 5,Test alternative paths for the system to display the message.,functional_test,High,"1. Navigate to the message where the display can be performed.
+2. As a(n) system, provide all necessary valid data to perform the display.
+3. Initiate the display (e.g., click 'Submit', 'Save', or 'Run').
+4. Observe the system's response.
+5. Verify that the system behaves as described in the scenario: 'Test alternative paths for the system to display the message.'",The system should be able to complete the display successfully. The state of the message should be updated correctly as described in the requirement.,0.92

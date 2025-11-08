@@ -1,0 +1,21 @@
+requirement_id,requirement_text,priority,category
+R1,The system shall allow users to create a new account using email and password,High,Signup
+R2,The system shall validate email format during signup,High,Signup
+R3,"The system shall enforce a strong password policy (minimum 8 characters, mix of letters and numbers)",High,Signup
+R4,The system shall allow users to confirm their password at signup,Medium,Signup
+R5,The system shall notify users if the email is already registered,High,Signup
+R6,The system shall allow registered users to log in using their email and password,High,Login
+R7,The system shall lock the account after 5 failed login attempts,High,Login
+R8,The system shall display an error message for invalid login credentials,High,Login
+R9,The system shall allow users to log out securely,High,Login
+R10,The system shall support 'Remember Me' functionality for login,Medium,Login
+R11,The system shall allow users to reset their password via email,High,Login
+R12,The system shall provide a search bar on the homepage,High,Search
+R13,The system shall allow users to search content by keywords,High,Search
+R14,The system shall return search results within 2 seconds,High,Search
+R15,The system shall display search results with relevance ranking,Medium,Search
+R16,The system shall allow users to filter search results by category,Medium,Search
+R17,The system shall allow users to view the most recent searches,Low,Search
+R18,The system shall provide autocomplete suggestions while typing in the search bar,Medium,Search
+R19,The system shall highlight matching keywords in search results,Low,Search
+R20,The system shall display a message if no search results are found,Medium,Search
