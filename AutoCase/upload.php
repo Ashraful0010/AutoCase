@@ -170,8 +170,11 @@
         // --- Configuration ---
         $uploads_dir = 'uploads/';
         $outputs_dir = 'outputs/';
+        // REVERTED to 'python' to avoid Windows 'App execution aliases' issue
         $python_executable = 'python';
         $python_script = 'test_case_generator.py';
+        // Updated allowed file extensions to include docx and doc
+        $allowed_extensions = ['csv', 'xlsx', 'xls', 'docx', 'doc'];
 
         if (!is_dir($uploads_dir))
             mkdir($uploads_dir, 0777, true);
@@ -179,24 +182,38 @@
             mkdir($outputs_dir, 0777, true);
 
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["requirements_file"])) {
-            $file_error = $_FILES['requirements_file']['error'];
+            $file = $_FILES["requirements_file"];
+            $file_error = $file['error'];
+            $original_name = basename($file["name"]);
 
             if ($file_error == UPLOAD_ERR_OK) {
-                $tmp_name = $_FILES["requirements_file"]["tmp_name"];
-                $original_name = basename($_FILES["requirements_file"]["name"]);
+                $tmp_name = $file["tmp_name"];
                 $file_ext = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
 
-                if (!in_array($file_ext, ['csv', 'xlsx', 'xls'])) {
-                    echo_error("Invalid file type. Please upload a CSV or Excel file.");
+                if (!in_array($file_ext, $allowed_extensions)) {
+                    // Updated error message
+                    echo_error("Invalid file type. Please upload a CSV, DOCX, DOC, or Excel file (XLS/XLSX).");
                 } else {
-                    $unique_name = uniqid() . '-' . preg_replace("/[^a-zA-Z0-9.\-_]/", "", $original_name);
+                    // Generate a safe, unique filename
+                    $unique_name = uniqid("REQ_") . '_' . preg_replace("/[^a-zA-Z0-9.\-_]/", "", $original_name);
                     $uploaded_file_path = $uploads_dir . $unique_name;
 
                     if (move_uploaded_file($tmp_name, $uploaded_file_path)) {
                         putenv('PYTHONIOENCODING=UTF-8');
+
+                        // Construct the command using the configured executable and escaped path
                         $command = escapeshellcmd($python_executable . " " . $python_script . " " . escapeshellarg($uploaded_file_path)) . " 2>&1";
+
+                        // Execute the command
                         $output = shell_exec($command);
-                        display_results($output, $original_name);
+
+                        if ($output === null) {
+                            echo_error("Python execution failed. Check server permissions or Python path (using $python_executable).");
+                            // Display the command for debugging
+                            echo "<h3>Attempted Command:</h3><pre>" . htmlspecialchars($command) . "</pre>";
+                        } else {
+                            display_results($output, $original_name);
+                        }
                     } else {
                         echo_error("Failed to move the uploaded file. Check directory permissions.");
                     }
@@ -205,23 +222,36 @@
                 echo_error("File upload failed with error code: " . $file_error);
             }
         } else {
-            echo_error("No file uploaded or invalid request.");
+            // Check for potential error if the request was POST but the file wasn't set (e.g., file too large)
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                echo_error("No file uploaded or file was too large (check server limits).");
+            } else {
+                echo_error("No file uploaded or invalid request.");
+            }
         }
 
         // --- Helper Functions ---
         
+        /**
+         * Parses the summary sections from the Python script output.
+         */
         function parse_summary_from_output($output)
         {
             $summaries = ['performance' => null, 'coverage' => null];
-            if (preg_match('/(📊 Model Performance Summary:.*?)(?=✅)/s', $output, $matches)) {
+            // Regex to capture the performance summary block
+            if (preg_match('/(📊 Model Performance Summary:.*?)(?=✅|\n\n)/s', $output, $matches)) {
                 $summaries['performance'] = trim($matches[1]);
             }
+            // Regex to capture the coverage summary block
             if (preg_match('/(📈 COVERAGE SUMMARY.*)/s', $output, $matches)) {
                 $summaries['coverage'] = trim($matches[1]);
             }
             return $summaries;
         }
 
+        /**
+         * Displays the results page, including download link and charts.
+         */
         function display_results($output, $original_name)
         {
             $csv_file = 'outputs/generated_test_cases.csv';
@@ -251,6 +281,11 @@
                     echo "<pre>" . htmlspecialchars($summaries['coverage']) . "</pre>";
                     echo "</div>";
                 }
+
+                // Also display the full script output
+                echo "<h3>Full Script Output:</h3>";
+                echo "<pre>" . htmlspecialchars($output) . "</pre>";
+
                 echo "</section>";
 
                 echo "<section class='outputs-section'>";
@@ -276,6 +311,9 @@
             }
         }
 
+        /**
+         * Displays a formatted error message and a link to try again.
+         */
         function echo_error($message)
         {
             echo "<div class='message error'><strong>Error:</strong> " . htmlspecialchars($message) . "</div>";
