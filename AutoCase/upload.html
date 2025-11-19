@@ -236,7 +236,8 @@
         <img src="Logo/WhiteLogo.png" alt="Logo" class="logo">
         <header>
             <h1>AI-Powered Test Case Generator</h1>
-            <p>Upload your requirements file (CSV or Excel) to automatically generate test cases and insights.</p>
+            <p>Upload your requirements file (CSV, Excel, or Word) to automatically generate test cases and insights.
+            </p>
         </header>
 
         <a href="home.php" class="home-btn">🏠 Go to Home</a>
@@ -246,7 +247,8 @@
                 <span class="icon">📁</span>
                 <span>Choose File...</span>
             </label>
-            <input id="file-upload" type="file" name="requirements_file" accept=".csv, .xlsx, .xls" required>
+            <input id="file-upload" type="file" name="requirements_file" accept=".csv, .xlsx, .xls, .docx, .doc"
+                required>
             <span id="file-name">No file selected</span>
 
             <button type="submit" name="submit">
@@ -279,9 +281,10 @@
         };
 
         uploadForm.onsubmit = function (e) {
-            const allowedExtensions = /(\.csv|\.xlsx|\.xls)$/i;
+            // UPDATED REGEX to include .docx and .doc
+            const allowedExtensions = /(\.csv|\.xlsx|\.xls|\.docx|\.doc)$/i;
             if (!fileInput.value || !allowedExtensions.exec(fileInput.value)) {
-                errorMessageDiv.textContent = 'Error: Please upload a valid CSV or Excel file.';
+                errorMessageDiv.textContent = 'Error: Please upload a valid CSV, Excel, or Word (.docx/.doc) file.';
                 errorMessageDiv.style.display = 'block';
                 e.preventDefault();
                 return;
