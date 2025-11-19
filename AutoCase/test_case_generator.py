@@ -1,13 +1,5 @@
-# -*- coding: utf-8 -*-
 """
-AI Test Case Generator - Standalone Version
-Compatible with HTML/CSS/PHP integration
-
-UPGRADED VERSION 3:
-- Uses spaCy Matcher and POS tagging for accurate entity extraction.
-- Generates dynamic, specific test scenarios and steps.
-- Passes extracted entities through the full pipeline.
-- DYNAMIC TEST STEPS based on test category.
+AI Test Case Generator - Standalone Version WITH DOCX SUPPORT
 """
 
 import sys
@@ -15,30 +7,79 @@ import os
 import pandas as pd
 import numpy as np
 import spacy
-from spacy.matcher import Matcher  # Import Matcher
+from spacy.matcher import Matcher
 import nltk
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
 import re
 import warnings
+import docx   
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 
 warnings.filterwarnings('ignore')
 
 # ===============================
-# INITIAL SETUP
+# DOCX → CSV CONVERTER (NEW)
 # ===============================
 
-# Check command-line argument
+def convert_docx_to_csv(docx_path):
+    print("📄 Converting DOCX → CSV...")
+
+    document = docx.Document(docx_path)
+
+    rows = []
+    req_counter = 1
+
+    for para in document.paragraphs:
+        text = para.text.strip()
+        if not text:
+            continue
+
+        # Match pattern: R1: Something...
+        match = re.match(r"^(R\d+)\s*:\s*(.+)$", text)
+        if match:
+            req_id = match.group(1)
+            req_text = match.group(2)
+
+            rows.append({
+                "requirement_id": req_id,
+                "requirement_text": req_text,
+                "priority": "Medium",     # default
+                "category": "general"     # default
+            })
+
+    if not rows:
+        print("❌ No valid requirement pattern (R#: text) found in DOCX")
+        sys.exit(1)
+
+    df = pd.DataFrame(rows)
+
+    out_csv = "converted_requirements.csv"
+    df.to_csv(out_csv, index=False)
+
+    print("✅ DOCX converted successfully →", out_csv)
+    return out_csv
+
+
+# ===============================
+# CHECK INPUT & AUTO-CONVERT DOCX
+# ===============================
+
 if len(sys.argv) < 2:
     print("❌ Error: No input file provided.")
-    print("Usage: python your_script_name.py /path/to/your/requirements.csv")
     sys.exit(1)
 
 input_file = sys.argv[1]
+
+# Auto-detect and convert DOCX
+if input_file.endswith(".docx"):
+    print("📥 DOCX detected. Converting to CSV...")
+    input_file = convert_docx_to_csv(input_file)   # replace path with CSV
+
+# Make sure outputs/ exists
 os.makedirs("outputs", exist_ok=True)
 
 # Ensure NLTK data exists
@@ -52,7 +93,6 @@ try:
     nlp = spacy.load("en_core_web_sm")
 except:
     from spacy.cli import download
-    print("Downloading spaCy model...")
     download("en_core_web_sm")
     nlp = spacy.load("en_core_web_sm")
 
