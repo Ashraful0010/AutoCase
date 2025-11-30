@@ -2,6 +2,9 @@
 // Start the session
 session_start();
 
+// Include the database connection file
+require_once 'db_connect.php';
+
 // Initialize variables
 $name = "";
 $email = "";
@@ -23,30 +26,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errorMessage = "Email address is required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errorMessage = "Please enter a valid email address.";
-    } elseif (isset($_SESSION['users'][$email])) {
-        $errorMessage = "An account with this email already exists.";
     } elseif (empty($password)) {
         $errorMessage = "Password is required.";
     } elseif (strlen($password) < 8) {
         $errorMessage = "Password must be at least 8 characters long.";
     } else {
-        // Validation successful!
-        // Hash the password for security
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        // Check if email already exists
+        $conn = getConnection();
+        $sql_check = "SELECT id FROM users WHERE email = ?";
 
-        // In a real app, you would save to a database. Here, we use the session.
-        if (!isset($_SESSION['users'])) {
-            $_SESSION['users'] = [];
+        if ($stmt_check = $conn->prepare($sql_check)) {
+            $stmt_check->bind_param("s", $param_email);
+            $param_email = $email;
+            $stmt_check->execute();
+            $stmt_check->store_result();
+
+            if ($stmt_check->num_rows > 0) {
+                $errorMessage = "An account with this email already exists.";
+            }
+            $stmt_check->close();
+        } else {
+            $errorMessage = "Database error during email check.";
         }
-        $_SESSION['users'][$email] = [
-            'name' => $name,
-            'password' => $hashedPassword
-        ];
+        $conn->close();
 
-        // Set a success message and redirect to the login page
-        $_SESSION['success_message'] = "Registration successful! Please log in.";
-        header("Location: login.php");
-        exit();
+        // If no error so far, proceed with registration
+        if (empty($errorMessage)) {
+            // Hash the password for security
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            $conn = getConnection();
+            // Prepare an insert statement
+            $sql_insert = "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)";
+
+            if ($stmt_insert = $conn->prepare($sql_insert)) {
+                $stmt_insert->bind_param("sss", $param_name, $param_email, $param_password_hash);
+
+                // Set parameters
+                $param_name = $name;
+                $param_email = $email;
+                $param_password_hash = $hashedPassword;
+
+                // Attempt to execute the prepared statement
+                if ($stmt_insert->execute()) {
+                    // Set a success message and redirect to the login page
+                    $_SESSION['success_message'] = "Registration successful! Please log in.";
+                    header("Location: login.php");
+                    exit();
+                } else {
+                    $errorMessage = "Something went wrong. Please try again later. (" . $conn->error . ")";
+                }
+
+                // Close statement
+                $stmt_insert->close();
+            } else {
+                $errorMessage = "Database error: Could not prepare insert statement.";
+            }
+            $conn->close();
+        }
     }
 }
 ?>
