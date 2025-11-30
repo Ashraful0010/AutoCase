@@ -1,3 +1,204 @@
+<?php
+// Start the session
+session_start();
+
+// Redirect if user is not logged in (now checks for user_id which is set upon DB login)
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Include the database connection file
+require_once 'db_connect.php'; // <<< ADDED CONNECTION
+
+// --- Configuration ---
+$uploads_dir = 'uploads/';
+$outputs_dir = 'outputs/';
+// REVERTED to 'python' to avoid Windows 'App execution aliases' issue
+$python_executable = 'python';
+$python_script = 'test_case_generator.py';
+// Updated allowed file extensions to include docx and doc
+$allowed_extensions = ['csv', 'xlsx', 'xls', 'docx', 'doc'];
+
+if (!is_dir($uploads_dir))
+    mkdir($uploads_dir, 0777, true);
+if (!is_dir($outputs_dir))
+    mkdir($outputs_dir, 0777, true);
+
+// --- Helper Functions ---
+
+/**
+ * Parses the summary sections from the Python script output.
+ */
+function parse_summary_from_output($output)
+{
+    $summaries = ['performance' => null, 'coverage' => null];
+    // Regex to capture the performance summary block
+    if (preg_match('/(📊 Model Performance Summary:.*?)(?=✅|\n\n)/s', $output, $matches)) {
+        $summaries['performance'] = trim($matches[1]);
+    }
+    // Regex to capture the coverage summary block
+    if (preg_match('/(📈 COVERAGE SUMMARY.*)/s', $output, $matches)) {
+        $summaries['coverage'] = trim($matches[1]);
+    }
+    return $summaries;
+}
+
+/**
+ * Displays a formatted error message and a link to try again.
+ */
+function echo_error($message)
+{
+    echo "<div class='message error'><strong>Error:</strong> " . htmlspecialchars($message) . "</div>";
+    echo "<a href='upload.html' class='back-link'>← Try Again</a>"; // Changed index.html to upload.html
+}
+
+/**
+ * Displays the results page, including download link and charts.
+ */
+function display_results($output, $original_name) // <<< REMOVED $conn ARG, uses getConnection() internally
+{
+    global $outputs_dir;
+    $csv_file = $outputs_dir . 'generated_test_cases.csv';
+    $chart1 = $outputs_dir . 'category_distribution.png';
+    $chart2 = $outputs_dir . 'priority_distribution.png';
+    $chart3 = $outputs_dir . 'coverage_chart.png';
+
+    if (file_exists($csv_file)) {
+        $summaries = parse_summary_from_output($output);
+
+        // ⭐ DATABASE/SESSION UPDATE LOGIC ⭐
+        $generated_count = 0;
+        // Parse the total test case count from the Python script's delimited output
+        if (preg_match('/---TEST_CASE_COUNT_DELIMITER---\s*(\d+)/', $output, $matches)) {
+            $generated_count = (int) $matches[1];
+
+            // Update Database (Permanent Record)
+            $user_id = $_SESSION['user_id'];
+
+            $conn = getConnection(); // <<< GET NEW CONNECTION
+
+            // Add the new count to the existing total count in the database
+            $sql = "UPDATE users SET test_case_count = test_case_count + ? WHERE id = ?";
+            if ($stmt = $conn->prepare($sql)) {
+                $stmt->bind_param("ii", $generated_count, $user_id);
+                $stmt->execute();
+                $stmt->close();
+            }
+            $conn->close(); // <<< CLOSE CONNECTION
+
+            // Update Session (Active Count)
+            $_SESSION['test_case_count'] = ($_SESSION['test_case_count'] ?? 0) + $generated_count;
+            $total_count = $_SESSION['test_case_count'];
+        } else {
+            $total_count = $_SESSION['test_case_count'] ?? 0;
+        }
+        // ⭐ END OF DATABASE/SESSION UPDATE LOGIC ⭐
+
+
+        echo "<h1>Test Case Generation Results</h1>";
+        echo "<p>Results for <strong>" . htmlspecialchars($original_name) . "</strong> have been generated successfully.</p>";
+        echo "<p class='font-bold text-lg text-green-300'>✨ Generated " . number_format($generated_count) . " Test Cases (Cumulative Total: " . number_format($total_count) . ")</p>"; // Display new count
+
+        echo "<section class='outputs-section'>";
+        echo "<h2>Execution Summary</h2>";
+
+        if (!empty($summaries['performance'])) {
+            echo "<div class='summary-container'>";
+            echo "<h3>Model Performance</h3>";
+            echo "<pre>" . htmlspecialchars($summaries['performance']) . "</pre>";
+            echo "</div>";
+        }
+
+        if (!empty($summaries['coverage'])) {
+            echo "<div class='summary-container'>";
+            echo "<h3>Coverage & Distribution</h3>";
+            echo "<pre>" . htmlspecialchars($summaries['coverage']) . "</pre>";
+            echo "</div>";
+        }
+
+        // Also display the full script output
+        echo "<h3>Full Script Output:</h3>";
+        echo "<pre>" . htmlspecialchars($output) . "</pre>";
+
+        echo "</section>";
+
+        echo "<section class='outputs-section'>";
+        echo "<h2>Download Test Cases</h2>";
+        echo "<a href='" . htmlspecialchars($csv_file) . "' class='download-link' download>📄 Download generated_test_cases.csv</a>";
+
+        echo "<h2>Analysis Charts</h2>";
+        echo "<div class='charts-grid'>";
+        if (file_exists($chart1))
+            echo "<div class='chart-container'><h3>Category Distribution</h3><img src='" . htmlspecialchars($chart1) . "?t=" . time() . "' alt='Category Chart'></div>";
+        if (file_exists($chart2))
+            echo "<div class='chart-container'><h3>Priority Distribution</h3><img src='" . htmlspecialchars($chart2) . "?t=" . time() . "' alt='Priority Chart'></div>";
+        if (file_exists($chart3))
+            echo "<div class='chart-container'><h3>Requirements Coverage</h3><img src='" . htmlspecialchars($chart3) . "?t=" . time() . "' alt='Coverage Chart'></div>";
+        echo "</div></section>";
+
+        echo "<a href='upload.html' class='back-link'>← Process Another File</a>";
+
+    } else {
+        echo_error("Python script executed, but output files were not found. Please check the script for errors.");
+        echo "<h3>Script Output / Errors:</h3>";
+        echo "<pre>" . htmlspecialchars($output) . "</pre>";
+    }
+}
+
+
+// --- Main Execution Logic (remains unchanged) ---
+$output = null;
+$original_name = null;
+$is_success = false;
+$error_message = null;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["requirements_file"])) {
+    $file = $_FILES["requirements_file"];
+    $file_error = $file['error'];
+    $original_name = basename($file["name"]);
+
+    if ($file_error == UPLOAD_ERR_OK) {
+        $tmp_name = $file["tmp_name"];
+        $file_ext = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
+
+        if (!in_array($file_ext, $allowed_extensions)) {
+            $error_message = "Invalid file type. Please upload a CSV, DOCX, DOC, or Excel file (XLS/XLSX).";
+        } else {
+            // Generate a safe, unique filename
+            $unique_name = uniqid("REQ_") . '_' . preg_replace("/[^a-zA-Z0-9.\-_]/", "", $original_name);
+            $uploaded_file_path = $uploads_dir . $unique_name;
+
+            if (move_uploaded_file($tmp_name, $uploaded_file_path)) {
+                putenv('PYTHONIOENCODING=UTF-8');
+
+                // Construct the command using the configured executable and escaped path
+                $command = escapeshellcmd($python_executable . " " . $python_script . " " . escapeshellarg($uploaded_file_path)) . " 2>&1";
+
+                // Execute the command
+                $output = shell_exec($command);
+
+                if ($output === null) {
+                    $error_message = "Python execution failed. Check server permissions or Python path (using $python_executable).";
+                } else {
+                    $is_success = true;
+                }
+            } else {
+                $error_message = "Failed to move the uploaded file. Check directory permissions.";
+            }
+        }
+    } else {
+        $error_message = "File upload failed with error code: " . $file_error;
+    }
+} else {
+    // Check for potential error if the request was POST but the file wasn't set (e.g., file too large)
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $error_message = "No file uploaded or file was too large (check server limits).";
+    } else {
+        $error_message = "No file uploaded or invalid request.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,12 +233,15 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
         }
 
-        /* ===== Header ===== */
+        /* ===== Header (Logo and Button) ===== */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            /* Added padding to separate from content */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .header img {
@@ -60,7 +264,7 @@
             transform: scale(1.05);
         }
 
-        /* ===== Section Titles ===== */
+        /* ===== Section Titles and Content Area ===== */
         h1,
         h2,
         h3 {
@@ -162,162 +366,22 @@
 <body>
     <div class="container">
         <div class="header">
+            <!-- LOGO is here, at the top of the container -->
             <img src="Logo/WhiteLogo.png" alt="Tool Logo">
             <button onclick="window.location.href='home.php'">🏠 Go to Home</button>
         </div>
 
+        <!-- DISPLAY RESULTS/ERRORS HERE (below the header) -->
         <?php
-        // --- Configuration ---
-        $uploads_dir = 'uploads/';
-        $outputs_dir = 'outputs/';
-        // REVERTED to 'python' to avoid Windows 'App execution aliases' issue
-        $python_executable = 'python';
-        $python_script = 'test_case_generator.py';
-        // Updated allowed file extensions to include docx and doc
-        $allowed_extensions = ['csv', 'xlsx', 'xls', 'docx', 'doc'];
-
-        if (!is_dir($uploads_dir))
-            mkdir($uploads_dir, 0777, true);
-        if (!is_dir($outputs_dir))
-            mkdir($outputs_dir, 0777, true);
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["requirements_file"])) {
-            $file = $_FILES["requirements_file"];
-            $file_error = $file['error'];
-            $original_name = basename($file["name"]);
-
-            if ($file_error == UPLOAD_ERR_OK) {
-                $tmp_name = $file["tmp_name"];
-                $file_ext = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
-
-                if (!in_array($file_ext, $allowed_extensions)) {
-                    // Updated error message
-                    echo_error("Invalid file type. Please upload a CSV, DOCX, DOC, or Excel file (XLS/XLSX).");
-                } else {
-                    // Generate a safe, unique filename
-                    $unique_name = uniqid("REQ_") . '_' . preg_replace("/[^a-zA-Z0-9.\-_]/", "", $original_name);
-                    $uploaded_file_path = $uploads_dir . $unique_name;
-
-                    if (move_uploaded_file($tmp_name, $uploaded_file_path)) {
-                        putenv('PYTHONIOENCODING=UTF-8');
-
-                        // Construct the command using the configured executable and escaped path
-                        $command = escapeshellcmd($python_executable . " " . $python_script . " " . escapeshellarg($uploaded_file_path)) . " 2>&1";
-
-                        // Execute the command
-                        $output = shell_exec($command);
-
-                        if ($output === null) {
-                            echo_error("Python execution failed. Check server permissions or Python path (using $python_executable).");
-                            // Display the command for debugging
-                            echo "<h3>Attempted Command:</h3><pre>" . htmlspecialchars($command) . "</pre>";
-                        } else {
-                            display_results($output, $original_name);
-                        }
-                    } else {
-                        echo_error("Failed to move the uploaded file. Check directory permissions.");
-                    }
-                }
-            } else {
-                echo_error("File upload failed with error code: " . $file_error);
-            }
-        } else {
-            // Check for potential error if the request was POST but the file wasn't set (e.g., file too large)
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                echo_error("No file uploaded or file was too large (check server limits).");
-            } else {
-                echo_error("No file uploaded or invalid request.");
-            }
-        }
-
-        // --- Helper Functions ---
-        
-        /**
-         * Parses the summary sections from the Python script output.
-         */
-        function parse_summary_from_output($output)
-        {
-            $summaries = ['performance' => null, 'coverage' => null];
-            // Regex to capture the performance summary block
-            if (preg_match('/(📊 Model Performance Summary:.*?)(?=✅|\n\n)/s', $output, $matches)) {
-                $summaries['performance'] = trim($matches[1]);
-            }
-            // Regex to capture the coverage summary block
-            if (preg_match('/(📈 COVERAGE SUMMARY.*)/s', $output, $matches)) {
-                $summaries['coverage'] = trim($matches[1]);
-            }
-            return $summaries;
-        }
-
-        /**
-         * Displays the results page, including download link and charts.
-         */
-        function display_results($output, $original_name)
-        {
-            $csv_file = 'outputs/generated_test_cases.csv';
-            $chart1 = 'outputs/category_distribution.png';
-            $chart2 = 'outputs/priority_distribution.png';
-            $chart3 = 'outputs/coverage_chart.png';
-
-            if (file_exists($csv_file)) {
-                $summaries = parse_summary_from_output($output);
-
-                echo "<h1>Test Case Generation Results</h1>";
-                echo "<p>Results for <strong>" . htmlspecialchars($original_name) . "</strong> have been generated successfully.</p>";
-
-                echo "<section class='outputs-section'>";
-                echo "<h2>Execution Summary</h2>";
-
-                if (!empty($summaries['performance'])) {
-                    echo "<div class='summary-container'>";
-                    echo "<h3>Model Performance</h3>";
-                    echo "<pre>" . htmlspecialchars($summaries['performance']) . "</pre>";
-                    echo "</div>";
-                }
-
-                if (!empty($summaries['coverage'])) {
-                    echo "<div class='summary-container'>";
-                    echo "<h3>Coverage & Distribution</h3>";
-                    echo "<pre>" . htmlspecialchars($summaries['coverage']) . "</pre>";
-                    echo "</div>";
-                }
-
-                // Also display the full script output
-                echo "<h3>Full Script Output:</h3>";
-                echo "<pre>" . htmlspecialchars($output) . "</pre>";
-
-                echo "</section>";
-
-                echo "<section class='outputs-section'>";
-                echo "<h2>Download Test Cases</h2>";
-                echo "<a href='" . htmlspecialchars($csv_file) . "' class='download-link' download>📄 Download generated_test_cases.csv</a>";
-
-                echo "<h2>Analysis Charts</h2>";
-                echo "<div class='charts-grid'>";
-                if (file_exists($chart1))
-                    echo "<div class='chart-container'><h3>Category Distribution</h3><img src='" . htmlspecialchars($chart1) . "?t=" . time() . "' alt='Category Chart'></div>";
-                if (file_exists($chart2))
-                    echo "<div class='chart-container'><h3>Priority Distribution</h3><img src='" . htmlspecialchars($chart2) . "?t=" . time() . "' alt='Priority Chart'></div>";
-                if (file_exists($chart3))
-                    echo "<div class='chart-container'><h3>Requirements Coverage</h3><img src='" . htmlspecialchars($chart3) . "?t=" . time() . "' alt='Coverage Chart'></div>";
-                echo "</div></section>";
-
-                echo "<a href='upload.html' class='back-link'>← Process Another File</a>";
-
-            } else {
-                echo_error("Python script executed, but output files were not found. Please check the script for errors.");
+        if ($is_success) {
+            display_results($output, $original_name);
+        } elseif ($error_message !== null) {
+            echo_error($error_message);
+            // If Python execution failed, show the attempted command for debugging
+            if ($output !== null) {
                 echo "<h3>Script Output / Errors:</h3>";
                 echo "<pre>" . htmlspecialchars($output) . "</pre>";
             }
-        }
-
-        /**
-         * Displays a formatted error message and a link to try again.
-         */
-        function echo_error($message)
-        {
-            echo "<div class='message error'><strong>Error:</strong> " . htmlspecialchars($message) . "</div>";
-            echo "<a href='index.html' class='back-link'>← Try Again</a>";
         }
         ?>
 
