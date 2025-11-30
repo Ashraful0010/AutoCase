@@ -27,7 +27,7 @@ AutoCase is a web-based application designed to streamline the Software Quality 
 
 ⚙️ Installation & Setup
 1. Clone the repository:
-git clone https://github.com/yourusername/autocase.git
+git clone https://github.com/Ashraful0010/autocase.git
 
 2. Set Up Server:
 Use XAMPP.
@@ -45,5 +45,5 @@ Prepare requirement file, upload, and download generated test cases.
 📧 Contact
 Ashraful Islam Opu
 Email: ashrafulislamopu0010@gmail.com
-GitHub: https://github.com/Ashraful0010/AutoCase
+Linkedin: https://www.linkedin.com/in/ashrafulislam0010
 
