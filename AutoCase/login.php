@@ -2,6 +2,9 @@
 // Start a session to store login state and user data
 session_start();
 
+// Include the database connection file
+require_once 'db_connect.php';
+
 // If user is already logged in, redirect to home page
 if (isset($_SESSION['user_email'])) {
     header("Location: home.php");
@@ -35,19 +38,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     // --- Authentication Logic ---
     else {
-        // Check if the user exists and the password is correct
-        if (isset($_SESSION['users'][$email]) && password_verify($password, $_SESSION['users'][$email]['password'])) {
-            // Authentication successful!
-            $_SESSION['user_name'] = $_SESSION['users'][$email]['name'];
-            $_SESSION['user_email'] = $email;
-            // Load the user's test case count into the active session
-            $_SESSION['test_case_count'] = $_SESSION['users'][$email]['test_case_count'] ?? 0;
+        // Establish connection
+        $conn = getConnection();
 
-            header("Location: home.php");
-            exit();
+        // Prepare a select statement
+        $sql = "SELECT id, name, password_hash, test_case_count FROM users WHERE email = ?";
+
+        if ($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param("s", $param_email);
+            $param_email = $email;
+
+            if ($stmt->execute()) {
+                $stmt->store_result();
+
+                if ($stmt->num_rows == 1) {
+                    // Bind result variables
+                    $stmt->bind_result($id, $name, $hashed_password, $test_case_count);
+
+                    if ($stmt->fetch()) {
+                        // Verify password
+                        if (password_verify($password, $hashed_password)) {
+                            // Authentication successful!
+                            $_SESSION['user_id'] = $id; // Store ID for permanent record updates
+                            $_SESSION['user_name'] = $name;
+                            $_SESSION['user_email'] = $email;
+                            $_SESSION['test_case_count'] = $test_case_count;
+
+                            $stmt->close();
+                            $conn->close();
+
+                            header("Location: home.php");
+                            exit();
+                        } else {
+                            // Password is not valid
+                            $errorMessage = "Invalid email or password. Please try again.";
+                        }
+                    }
+                } else {
+                    // Email not found
+                    $errorMessage = "Invalid email or password. Please try again.";
+                }
+            } else {
+                $errorMessage = "Oops! Something went wrong with the database query. (" . $conn->error . ")";
+            }
+
+            // Close statement if it wasn't closed in the success block
+            if ($stmt && !$stmt->num_rows) {
+                $stmt->close();
+            }
         } else {
-            // Authentication failed
-            $errorMessage = "Invalid email or password. Please try again.";
+            $errorMessage = "Database error: Could not prepare statement.";
+        }
+
+        // Close connection
+        if (isset($conn)) {
+            $conn->close();
         }
     }
 }
