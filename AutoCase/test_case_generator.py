@@ -1,7 +1,7 @@
 """
 AI Test Case Generator - Standalone Version WITH DOCX SUPPORT
 """
-
+import random
 import sys
 import os
 import pandas as pd
@@ -228,17 +228,33 @@ class TestScenarioGenerator:
         X = self.vectorizer.fit_transform(training_data['text'])
         y = training_data['category']
         
+        # --- START OF FIX: Check for single-member classes before stratified split ---
+        unique_classes = y.value_counts()
+        # Check if all classes have at least 2 samples
+        if (unique_classes >= 2).all():
+            use_stratify = True
+        else:
+            use_stratify = False
+            print(f"⚠️ Warning: Some classes have only 1 member ({unique_classes[unique_classes == 1].index.tolist()}). Falling back to non-stratified split.")
+        
         if len(set(y)) < 2:
-            print(f"Warning: Only one class ('{y[0]}') found. Model will not be trained.")
+            print(f"Warning: Only one class ('{y.iloc[0]}') found. Model will not be trained.")
             class DummyClassifier:
                 def __init__(self, category): self.category = category
                 def fit(self, X, y): pass
                 def predict(self, X): return [self.category] * X.shape[0]
                 def predict_proba(self, X): return [[1.0]] * X.shape[0]
-            self.classifier = DummyClassifier(y[0] if len(y) > 0 else 'functional_test')
+            self.classifier = DummyClassifier(y.iloc[0] if len(y) > 0 else 'functional_test')
             return
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+        if use_stratify:
+            # ⭐ CHANGED test_size from 0.2 to 0.3 to meet the minimum requirement of 5 samples (20 * 0.3 = 6 samples) ⭐
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+        else:
+            # Fallback to non-stratified split, avoiding the ValueError, also using 0.3 for consistency
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+        # --- END OF FIX ---
+
         self.classifier.fit(X_train, y_train)
         y_pred = self.classifier.predict(X_test)
         print("\n📊 Model Performance Summary:")
@@ -321,7 +337,7 @@ class TestCaseGenerator:
     def __init__(self):
         self.test_cases = []
 
-    # ⭐ --- UPDATED FUNCTION --- ⭐
+    # ⭐ --- MODIFIED FUNCTION --- ⭐
     def generate_test_cases(self, scenarios_list):
         all_cases = []
         for i, scenario_data in enumerate(scenarios_list):
@@ -337,6 +353,8 @@ class TestCaseGenerator:
                     'test_description': scenario,
                     'test_category': category,
                     'priority': self._priority(scenario_data['confidence']),
+                    # ⭐ NEW COLUMN ADDED HERE ⭐
+                    'preconditions': self._generate_preconditions(scenario, entities, category), 
                     # ⭐ PASS THE CATEGORY to both functions ⭐
                     'test_steps': self._generate_test_steps(scenario, entities, category),
                     'expected_result': self._generate_expected_result(scenario, entities, category),
@@ -350,57 +368,188 @@ class TestCaseGenerator:
         elif conf >= 0.6: return 'Medium'
         else: return 'Low'
 
-    # ⭐ --- NEW DYNAMIC VERSION --- ⭐
-    def _generate_test_steps(self, scenario, entities, category):
-        """Generate category-specific, dynamic test steps"""
+    # ⭐ --- NEW DYNAMIC PRECONDITION FUNCTION --- ⭐
+    def _generate_preconditions(self, scenario, entities, category):
+        """Generate category-specific preconditions, emphasizing entity context."""
         
         actor = entities.get('actors', ['user'])[0] if entities.get('actors') else 'user'
-        obj = entities.get('objects', ['page/feature'])[0] if entities.get('objects') else 'page/feature'
+        obj = entities.get('objects', ['feature'])[0] if entities.get('objects') else 'feature'
         action = entities.get('actions', ['action'])[0] if entities.get('actions') else 'action'
-
-        steps_template = {
-            'functional_test': [
-                f"1. Navigate to the {obj} where the {action} can be performed.",
-                f"2. As a(n) {actor}, provide all necessary valid data to perform the {action}.",
-                f"3. Initiate the {action} (e.g., click 'Submit', 'Save', or 'Run').",
-                f"4. Observe the system's response.",
-                f"5. Verify that the system behaves as described in the scenario: '{scenario}'"
-            ],
-            'negative_test': [
-                f"1. Navigate to the {obj}.",
-                f"2. As a(n) {actor}, attempt to perform the {action} using invalid, malformed, or incomplete data.",
-                f"3. For example: {scenario}",
-                f"4. Initiate the {action}.",
-                f"5. Observe the system's response.",
-                f"6. Verify that a clear, user-friendly error message is displayed and the system remains stable."
-            ],
-            'boundary_test': [
-                f"1. Navigate to the input field on {obj} related to the boundary.",
-                f"2. As a(n) {actor}, enter the specific boundary value described in the scenario.",
-                f"3. For example: {scenario}",
-                f"4. Attempt to submit or {action} with this value.",
-                f"5. Observe the system's response.",
-                f"6. Verify the system correctly accepts or rejects the value as expected."
-            ],
-            'security_test': [
-                f"1. As an {actor} (e.g., an unauthorized user, or user with wrong role), navigate to {obj}.",
-                f"2. Attempt to perform the privileged {action} as described: '{scenario}'",
-                f"3. Observe all system responses, including UI messages and network responses (if possible).",
-                f"4. Verify that the action is blocked and an 'Unauthorized' or 'Access Denied' error is shown.",
-                f"5. (If possible) Check system logs to ensure the unauthorized attempt was recorded."
-            ],
-            'performance_test': [
-                f"1. Set up the test environment (e.g., load testing tool, baseline data).",
-                f"2. Configure the test to simulate the scenario: '{scenario}'",
-                f"3. (If load test) Begin with a single {actor} to establish a baseline response time for {action}.",
-                f"4. Gradually increase the load to the target number of concurrent {actor}s.",
-                f"5. Measure the response time, throughput, and system resource (CPU, Memory) usage.",
-                f"6. Verify all metrics remain within the defined performance SLAs."
-            ]
-        }
+        condition = entities.get('conditions', [''])[0] if entities.get('conditions') else ''
         
-        # Get the template for the category, or fall back to 'functional' if unknown
-        return "\n".join(steps_template.get(category, steps_template['functional_test']))
+        # Base preconditions are now more dynamic
+        base_preconditions = [
+            "1. The system is operational and accessible.",
+            f"2. The test environment has the necessary configuration for '{obj}'."
+        ]
+        
+        preconditions = []
+        
+        if category in ['functional_test', 'boundary_test', 'negative_test']:
+            preconditions = base_preconditions + [
+                f"3. The {actor} account is active and has permissions to '{action}' the {obj}.",
+                f"4. Required data for {obj} is pre-populated in the database/system."
+            ]
+        elif category == 'security_test':
+             preconditions = base_preconditions + [
+                f"3. An *unauthorized* user account (without access to {obj}) is available.",
+                f"4. Authentication/Authorization services are fully operational."
+            ]
+        elif category == 'performance_test':
+            preconditions = [
+                "1. A dedicated Performance Test environment is available and stable.",
+                f"2. Load generation tools are configured to simulate concurrent users {action} the {obj}.",
+                "3. Monitoring tools (CPU, memory) are active to capture metrics."
+            ]
+        
+        # Inject condition logic at the end if present
+        if condition:
+            preconditions.append(f"State Requirement: The system must meet the triggering condition for the {action} to be attempted.")
+
+        # Ensure the final list includes the base in case of other categories
+        if not preconditions:
+            preconditions = base_preconditions
+
+        return "\n".join(preconditions)
+
+
+    # ⭐ --- UPDATED: DYNAMIC & VARIED TEST STEPS --- ⭐
+    def _generate_test_steps(self, scenario, entities, category):
+        """Generate dynamic test steps with increased randomization and keyword context."""
+        
+        actor = entities.get('actors', ['user'])[0] if entities.get('actors') else 'user'
+        obj = entities.get('objects', ['feature'])[0] if entities.get('objects') else 'feature'
+        action = entities.get('actions', ['perform action'])[0] if entities.get('actions') else 'perform action'
+        condition = entities.get('conditions', [''])[0] if entities.get('conditions') else ''
+
+        # --- CONTEXT DETECTION ---
+        # Detect specific activities to swap templates
+        text_context = scenario.lower() + " " + action.lower()
+        is_upload = any(x in text_context for x in ['upload', 'attach', 'file', 'image', 'document'])
+        is_search = any(x in text_context for x in ['search', 'find', 'query', 'filter', 'sort'])
+        is_login = any(x in text_context for x in ['login', 'sign in', 'log in', 'auth'])
+        is_form = any(x in text_context for x in ['submit', 'fill', 'enter', 'form', 'create', 'update'])
+
+        steps = []
+
+        # 1. SETUP STEP (Increased Variations)
+        setup_variations = [
+            f"1. As {actor}, launch the application and navigate to the primary dashboard.",
+            f"1. Navigate directly to the '{obj}' interface/page.",
+            f"1. From the main menu, select the option to {action} the {obj}.",
+            f"1. Ensure the session for {actor} is active and ready."
+        ]
+        steps.append(random.choice(setup_variations))
+
+        # 2. ACTION STEPS (More Granular and Context Aware)
+        if category == 'functional_test':
+            if is_login:
+                steps.extend([
+                    "2. Enter valid credentials (username and password).",
+                    "3. Click the 'Login' or 'Sign In' button.",
+                    "4. Verify the successful redirection."
+                ])
+            elif is_upload:
+                steps.extend([
+                    f"2. Click the upload button associated with {obj}.",
+                    "3. Select a file of the required type and size (valid input).",
+                    "4. Monitor the upload progress and confirmation message."
+                ])
+            elif is_search:
+                steps.extend([
+                    f"2. Enter a known, valid search term into the search field.",
+                    f"3. Execute the search/filter operation.",
+                    f"4. Review the search results list."
+                ])
+            elif is_form:
+                steps.extend([
+                    "2. Fill in all fields with standard, valid data.",
+                    "3. Click the 'Save' or 'Submit' button.",
+                    f"4. Verify the new or updated {obj} record appears correctly."
+                ])
+            else:
+                # Generic Functional
+                steps.extend([
+                    f"2. Execute the primary action: '{action}'.",
+                    f"3. Review any immediate feedback or system changes.",
+                    f"4. Check related modules for data consistency."
+                ])
+
+        elif category == 'negative_test':
+            # Negative steps are more action-specific
+            if is_login:
+                bad_input = "an incorrect password"
+            elif is_form:
+                bad_input = "a value outside the allowed data type (e.g., text in a number field)"
+            elif is_upload:
+                 bad_input = "a file type that is explicitly not allowed (e.g., an .exe)"
+            else:
+                bad_input = "a known bad/malformed input"
+            
+            steps.extend([
+                f"2. Attempt to {action} by providing {bad_input}.",
+                "3. Observe the system's reaction.",
+                "4. Check for the display of an informative error message that guides the user.",
+                "5. Verify the state of the system remains unchanged (data was not saved)."
+            ])
+
+        elif category == 'security_test':
+            # Security steps are now more focused on privilege and direct attacks
+            if "unauthorized" in scenario.lower() or "permission" in scenario.lower():
+                steps.extend([
+                    "2. Log in with the *unauthorized* user account.",
+                    f"3. Attempt to access or {action} the {obj}.",
+                    "4. Verify a denial of service or access error is returned."
+                ])
+            elif "injection" in scenario.lower():
+                steps.extend([
+                    "2. In an input field, enter a common injection payload (e.g., XSS or SQL).",
+                    "3. Submit the input.",
+                    "4. Verify the system sanitizes or rejects the input, and no malicious code executes."
+                ])
+            else:
+                steps.extend([
+                    f"2. Perform a session-related manipulation (e.g., check for broken access control via URL tampering).",
+                    f"3. Attempt to {action} the {obj} using the manipulated session.",
+                    "4. Confirm that the security control properly enforces the policy."
+                ])
+
+        elif category == 'performance_test':
+            steps.extend([
+                "2. Begin the load/stress test simulation.",
+                f"3. Execute the {action} under a predefined concurrent load (e.g., 50 users).",
+                "4. Record the average and peak response times using monitoring tools.",
+                "5. Check the application/database logs for performance degradation or errors under load."
+            ])
+        
+        elif category == 'boundary_test':
+             steps.extend([
+                f"2. Input the value representing the *minimum accepted boundary* for {obj}.",
+                "3. Attempt to submit the form/action.",
+                f"4. Repeat with a value *just below* the minimum boundary.",
+                "5. Verify that the minimum boundary is accepted and the sub-minimum value is rejected."
+            ])
+             # Add a final step for the maximum boundary
+             steps.append("6. Repeat steps 2-5 for the maximum accepted boundary value (+1 over max).")
+        
+        # 3. VERIFICATION STEP (Direct reference to scenario)
+        verification_variations = [
+            f"Last. Verify the final result is: '{scenario}' is true.",
+            f"Last. Confirm the data state of {obj} reflects a successful and accurate {action}.",
+            f"Last. Check system logs/audit trail to ensure the transaction for {action} was recorded correctly."
+        ]
+        steps.append(random.choice(verification_variations))
+
+        # Re-number the steps
+        final_steps = []
+        for i, step in enumerate(steps):
+            # Check if step is the 'Last.' step to keep it
+            if step.startswith('Last.'):
+                final_steps.append(f"{i+1}. {step[5:].strip()}")
+            else:
+                final_steps.append(f"{i+1}. {step.split('.', 1)[-1].strip()}")
+
+        return "\n".join(final_steps)
 
     def _generate_expected_result(self, scenario, entities, category):
         actor = entities.get('actors', ['user'])[0] if entities.get('actors') else 'user'
@@ -519,7 +668,7 @@ def main_pipeline(file_path):
     print("=" * 60)
     print("📈 COVERAGE SUMMARY")
     print("=" * 60)
-    print(f"Requirements Coverage: {metrics['requirements_coverage']:.1f}%")
+    print(f"Requirements Coverage: {metrics['requirements_coverage']:.1f}%\n")
     print(f"Total Test Cases: {metrics['total_test_cases']}")
     
     if metrics['category_distribution']:
@@ -540,6 +689,11 @@ if __name__ == "__main__":
     file_path = input_file
     output_file, metrics = main_pipeline(file_path)
     
+    # ⭐ ADDED: Print a specific delimiter for PHP to easily find the count ⭐
+    print("---TEST_CASE_COUNT_DELIMITER---")
+    print(metrics['total_test_cases']) 
+    # ⭐ END ADDED BLOCK ⭐
+
     print("\n✅ Test Case Generation Completed Successfully.")
     print(f"Output File: {output_file}")
     print(f"Total Test Cases: {metrics['total_test_cases']}")
